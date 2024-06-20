@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import QrFrame from "../assets/qr-frame.svg";
 import "./QrStyles.css";
@@ -52,7 +52,7 @@ const QrReader = () => {
       );
   }, [qrOn]);
 
-  function isBase64(str) {
+  function isBase64(str: string): boolean {
     try {
       return btoa(atob(str)) === str;
     } catch (err) {
@@ -60,15 +60,15 @@ const QrReader = () => {
     }
   }
 
-  function decodeBase64(str) {
+  function decodeBase64(str: string): string {
     return atob(str);
   }
 
-  function isHex(str) {
+  function isHex(str: string): boolean {
     return /^[0-9a-fA-F]+$/.test(str);
   }
 
-  function decodeHex(str) {
+  function decodeHex(str: string): string {
     const hex = str.toString();
     let decodedStr = "";
     for (let i = 0; i < hex.length; i += 2) {
@@ -77,7 +77,7 @@ const QrReader = () => {
     return decodedStr;
   }
 
-  function decodeData(data) {
+  function decodeData(data: string): string {
     if (isBase64(data)) {
       return decodeBase64(data);
     } else if (isHex(data)) {
