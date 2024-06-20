@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import QrFrame from "../assets/qr-frame.svg";
 import "./QrStyles.css";
+import { Buffer } from "buffer";
 
 const QrReader = () => {
   const scanner = useRef<QrScanner>();
