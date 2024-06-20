@@ -12,7 +12,7 @@ function App() {
   return (
     <div>
       <button onClick={() => setOpenQr(!openQr)}>
-        {openQr ? "Close" : "Open"} QR Scanner camera
+        {openQr ? "Close" : "Open"} QR Scanner camera111
       </button>
       {openQr && <QrReader />}
     </div>

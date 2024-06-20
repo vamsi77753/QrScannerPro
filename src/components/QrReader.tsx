@@ -52,16 +52,55 @@ const QrReader = () => {
       );
   }, [qrOn]);
 
+  // function isBase64(str: string): boolean {
+  //   try {
+  //     return btoa(atob(str)) === str;
+  //   } catch (err) {
+  //     return false;
+  //   }
+  // }
+
+  // function decodeBase64(str: string): string {
+  //   return atob(str);
+  // }
+
+  // function isHex(str: string): boolean {
+  //   return /^[0-9a-fA-F]+$/.test(str);
+  // }
+
+  // function decodeHex(str: string): string {
+  //   const hex = str.toString();
+  //   let decodedStr = "";
+  //   for (let i = 0; i < hex.length; i += 2) {
+  //     decodedStr += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  //   }
+  //   return decodedStr;
+  // }
+
+  // function decodeData(data: string): string {
+  //   if (isBase64(data)) {
+  //     return decodeBase64(data);
+  //   } else if (isHex(data)) {
+  //     return decodeHex(data);
+  //   } else {
+  //     return data;
+  //   }
+  // }
+
   function isBase64(str: string): boolean {
     try {
-      return btoa(atob(str)) === str;
+      return (
+        Buffer.from(Buffer.from(str, "base64").toString("ascii")).toString(
+          "base64"
+        ) === str
+      );
     } catch (err) {
       return false;
     }
   }
 
   function decodeBase64(str: string): string {
-    return atob(str);
+    return Buffer.from(str, "base64").toString("ascii");
   }
 
   function isHex(str: string): boolean {
