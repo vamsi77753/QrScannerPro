@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import QrFrame from "../assets/qr-frame.svg";
 import "./QrStyles.css";
 import { Buffer } from "buffer";
 
-const QrReader = () => {
+const QrReader: React.FC = () => {
   const scanner = useRef<QrScanner>();
   const videoEl = useRef<HTMLVideoElement>(null);
   const qrBoxEl = useRef<HTMLDivElement>(null);
@@ -13,7 +13,7 @@ const QrReader = () => {
 
   const onScanSuccess = (result: QrScanner.ScanResult) => {
     console.log(result);
-    const decodedData = decodeData(result?.data);
+    const decodedData = decodeData(result.data);
     setScannedResult(decodedData);
   };
 
@@ -22,17 +22,17 @@ const QrReader = () => {
   };
 
   useEffect(() => {
-    if (videoEl?.current && !scanner.current) {
-      scanner.current = new QrScanner(videoEl?.current, onScanSuccess, {
+    if (videoEl.current && !scanner.current) {
+      scanner.current = new QrScanner(videoEl.current, onScanSuccess, {
         onDecodeError: onScanFail,
         preferredCamera: "environment",
         highlightScanRegion: true,
         highlightCodeOutline: true,
-        overlay: qrBoxEl?.current || undefined,
+        overlay: qrBoxEl.current || undefined,
       });
 
-      scanner?.current
-        ?.start()
+      scanner.current
+        .start()
         .then(() => setQrOn(true))
         .catch((err) => {
           if (err) setQrOn(false);
@@ -40,8 +40,8 @@ const QrReader = () => {
     }
 
     return () => {
-      if (!videoEl?.current) {
-        scanner?.current?.stop();
+      if (!videoEl.current) {
+        scanner.current?.stop();
       }
     };
   }, []);
@@ -52,80 +52,6 @@ const QrReader = () => {
         "Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload."
       );
   }, [qrOn]);
-
-  // function isBase64(str: string): boolean {
-  //   try {
-  //     return btoa(atob(str)) === str;
-  //   } catch (err) {
-  //     return false;
-  //   }
-  // }
-
-  // function decodeBase64(str: string): string {
-  //   return atob(str);
-  // }
-
-  // function isHex(str: string): boolean {
-  //   return /^[0-9a-fA-F]+$/.test(str);
-  // }
-
-  // function decodeHex(str: string): string {
-  //   const hex = str.toString();
-  //   let decodedStr = "";
-  //   for (let i = 0; i < hex.length; i += 2) {
-  //     decodedStr += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  //   }
-  //   return decodedStr;
-  // }
-
-  // function decodeData(data: string): string {
-  //   if (isBase64(data)) {
-  //     return decodeBase64(data);
-  //   } else if (isHex(data)) {
-  //     return decodeHex(data);
-  //   } else {
-  //     return data;
-  //   }
-  // }
-
-  function isBase64(str: string): boolean {
-    try {
-      return (
-        Buffer.from(Buffer.from(str, "base64").toString("ascii")).toString(
-          "base64"
-        ) === str
-      );
-    } catch (err) {
-      return false;
-    }
-  }
-
-  function decodeBase64(str: string): string {
-    return Buffer.from(str, "base64").toString("ascii");
-  }
-
-  function isHex(str: string): boolean {
-    return /^[0-9a-fA-F]+$/.test(str);
-  }
-
-  function decodeHex(str: string): string {
-    const hex = str.toString();
-    let decodedStr = "";
-    for (let i = 0; i < hex.length; i += 2) {
-      decodedStr += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    }
-    return decodedStr;
-  }
-
-  function decodeData(data: string): string {
-    if (isBase64(data)) {
-      return decodeBase64(data);
-    } else if (isHex(data)) {
-      return decodeHex(data);
-    } else {
-      return data;
-    }
-  }
 
   return (
     <div className="qr-reader">
@@ -157,3 +83,42 @@ const QrReader = () => {
 };
 
 export default QrReader;
+
+function isBase64(str: string): boolean {
+  try {
+    return (
+      Buffer.from(Buffer.from(str, "base64").toString(), "ascii").toString(
+        "base64"
+      ) === str
+    );
+  } catch (err) {
+    return false;
+  }
+}
+
+function decodeBase64(str: string): string {
+  return Buffer.from(str, "base64").toString("utf-8");
+}
+
+function isHex(str: string): boolean {
+  return /^[0-9a-fA-F]+$/.test(str);
+}
+
+function decodeHex(str: string): string {
+  const hex = str.toString();
+  let decodedStr = "";
+  for (let i = 0; i < hex.length; i += 2) {
+    decodedStr += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  }
+  return decodedStr;
+}
+
+function decodeData(data: string): string {
+  if (isBase64(data)) {
+    return decodeBase64(data);
+  } else if (isHex(data)) {
+    return decodeHex(data);
+  } else {
+    return data;
+  }
+}
